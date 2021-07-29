@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +51,11 @@ public class HomeController {
 					);
 		}catch(BadCredentialsException ex){
 			System.out.println(ex.getMessage());
-			throw new Exception("INVALID_CREDENTIALS", ex);
+			throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
+		}
+		catch(AuthenticationException ex){
+			System.out.println(ex.getMessage());
+			throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
 		}
 		
 		final UserDetails userDetails = usersService.loadUserByUsername(jwtRequest.getUsername());
